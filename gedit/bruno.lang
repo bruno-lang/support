@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<language id="bruno" _name="bruno" version="2.0" _section="Source">
+	<metadata>
+		<property name="mimetypes">text/plain</property>
+		<property name="globs">*.bruno</property>
+	</metadata>
+
+	<styles>
+		<style id="identifier"       name="Identifier"  map-to="def:identifier"/>
+		<style id="keyword"          _name="Keyword"    map-to="def:keyword"/>
+		<style id="operator"         _name="Operator"   map-to="def:operator"/>
+		<style id="comment"          _name="Comment"    map-to="def:comment"/>
+		<style id="atom"             name="Atom"        map-to="def:special-constant"/>
+		<style id="constant"         name="Constant"    map-to="def:constant"/>
+		<style id="key"              name="Key"         map-to="def:special-constant"/>
+		<style id="variable"         name="Variable"    map-to="def:variable"/>
+		<style id="quote"            name="Quote"       map-to="def:special-char"/>
+		<style id="string"           name="String"      map-to="def:string"/>
+		<style id="number"           name="Number"      map-to="def:number"/>
+		<style id="tuple"            name="Tuple"       map-to="def:tuple"/>
+		<style id="set"              name="Set"         map-to="def:set"/>
+		<style id="array"            name="Array"       map-to="def:array"/>
+		<style id="effect"           name="Effect"      map-to="def:statement"/>
+		<style id="placeholder"      name="Placeholder" map-to="def:type"/>
+		<style id="label"            name="Label"       map-to="def:label"/>
+	</styles>
+
+	<definitions>
+
+		<define-regex id="opchar">[&amp;*+./&gt;=&lt;:\\|-]</define-regex>
+
+		<context id="comments" style-ref="comment" 
+		class="comment" class-disabled="no-spell-check">
+			<start>%</start>
+			<end>%</end>
+		</context>
+
+		<context id="operators" style-ref="operator" extend-parent="false">
+			<match>\%{opchar}+</match>
+		</context>
+
+		<context id="tuples" style-ref="tuple">
+			<match>\(|\)</match>
+		</context>
+
+		<context id="sets" style-ref="set">
+			<match>\{|\}</match>
+		</context>
+
+		<context id="arrays" style-ref="array">
+			<match>\[|\]</match>
+		</context>
+
+		<context id="effects" style-ref="effect">
+			<match>!</match>
+		</context>
+
+		<context id="placeholders" style-ref="placeholder">
+			<match>[_~]</match>
+		</context>
+
+		<context id="atoms" style-ref="atom" extend-parent="false">
+			<match>`[^\s]+</match>
+		</context>
+
+		<context id="constants" style-ref="constant" extend-parent="false">
+			<match>\^[-+0-9,]+(:?.[0-9]+)?</match>
+		</context>
+
+		<context id="keys" style-ref="key" extend-parent="false">
+			<match>@(:?[a-z][-a-zA-Z0-9]*)?</match>
+		</context>
+
+		<context id="variables" style-ref="variable" extend-parent="false">
+			<match>\?(:?[0-9a-z][-a-zA-Z0-9]*)?</match>
+		</context>
+
+		<context id="labels" style-ref="label" extend-parent="false">
+			<match>^\s*[a-z0-9]\.\s</match>
+		</context>
+
+		<context id="numbers" style-ref="number" class-disabled="no-spell-check">
+			<match>#|[0-9]+(?:[.^a-z][0-9A-F]+)?</match>
+		</context>
+
+		<context id="strings" class-disabled="no-spell-check" class="string">
+			<match>(")(.*?)(")</match>
+
+			<include>
+				<context sub-pattern="1" style-ref="quote"/>
+				<context sub-pattern="2" style-ref="string"/>
+				<context sub-pattern="3" style-ref="quote"/>
+			</include>
+		</context>
+
+		<context id="strings2" class-disabled="no-spell-check" class="string">
+			<match>(')(.*?)(')</match>
+
+			<include>
+				<context sub-pattern="1" style-ref="quote"/>
+				<context sub-pattern="2" style-ref="string"/>
+				<context sub-pattern="3" style-ref="quote"/>
+			</include>
+		</context>
+
+		<context id="strings3" style-ref="string" style-inside="true"
+		class-disabled="no-spell-check" class="string">
+			<start>"""</start>
+			<end>"""</end>
+		</context>
+
+		<context id="declarations">
+			<match>^\s*([a-z]+)\s+([^\s:`]+)(\s*[^:]+\s*)?(::)</match>
+
+			<include>
+				<context sub-pattern="1" style-ref="keyword"/>
+				<context sub-pattern="2" style-ref="identifier"/>
+				<context sub-pattern="3" style-ref="atom"/>
+				<context sub-pattern="4" style-ref="operator"/>
+			</include>
+		</context>
+
+		<context id="keywords" style-ref="keyword">
+			<keyword>where</keyword>
+			<keyword>with</keyword>
+			<keyword>as</keyword>
+		</context>
+
+		<!--Main context-->
+		<context id="bruno" class="no-spell-check">
+			<include>
+				<context ref="comments"/>
+				<context ref="declarations"/>
+				<context ref="strings3"/>
+				<context ref="strings"/>
+				<context ref="strings2"/>
+				<context ref="atoms"/>
+				<context ref="constants"/>
+				<context ref="keys"/>
+				<context ref="variables"/>
+				<context ref="operators"/>
+				<context ref="tuples"/>
+				<context ref="sets"/>
+				<context ref="arrays"/>
+				<context ref="effects"/>
+				<context ref="placeholders"/>
+				<context ref="keywords"/>
+				<context ref="labels"/>
+				<context ref="numbers"/>
+			</include>
+		</context>
+	</definitions>
+</language>
