@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<language id="alma" _name="alma" version="2.0" _section="Source">
+	<metadata>
+		<property name="mimetypes">text/plain</property>
+		<property name="globs">*.alma</property>
+	</metadata>
+
+	<styles>
+		<style id="identifier"    name="Identifier" map-to="def:identifier"/>
+		<style id="comment"       _name="Comment"   map-to="def:comment"/>
+		<style id="charset"       name="Charset"    map-to="def:keyword"/>
+		<style id="literal"       _name="Literal"   map-to="def:string"/>
+		<style id="range"        name="Range"       map-to="def:tuple"/>
+		<style id="operator"      _name="Operator"  map-to="def:operator"/>
+		<style id="whitespace"    name="Whitespace" map-to="def:statement"/>
+		<style id="alias"         name="Alias"      map-to="def:constant"/>
+		<style id="reference"     name="Reference"  map-to="def:label"/>
+		<style id="sequence"      name="Sequence"   map-to="def:type"/>
+		<style id="number"        name="Number"     map-to="def:number"/>
+	</styles>
+
+	<definitions>
+
+		<!--Main context-->
+		<context id="alma" class="no-spell-check">
+			<include>
+				<context ref="comments"/>
+				<context ref="rules"/>
+				<context ref="charsets"/>
+				<context ref="literals"/>
+				<context ref="aliases"/>
+				<context ref="references"/>
+				<context ref="repetitions"/>
+				<context ref="operators"/>
+				<context ref="whitespaces"/>
+				<context ref="sequences"/>
+				<context ref="ranges"/>
+			</include>
+		</context>
+
+		<context id="rules" class-disabled="no-spell-check">
+			<match>(-)([a-zA-Z0-9\s_]+)(=)</match>
+
+			<include>
+				<context sub-pattern="1" style-ref="operator"/>
+				<context sub-pattern="2" style-ref="identifier"/>
+				<context sub-pattern="3" style-ref="operator"/>
+			</include>
+		</context>
+
+		<context id="repetitions" style-ref="range">
+			<match>[?*+]</match>
+		</context>
+
+		<context id="operators" style-ref="operator" extend-parent="false">
+			<match>[&gt;&lt;^~]</match>
+		</context>
+
+		<context id="whitespaces" style-ref="whitespace" extend-parent="false">
+			<match>[\.\:,;!]</match>
+		</context>
+
+		<context id="sequences" style-ref="sequence" extend-parent="false">
+			<match>[\(\)|]</match>
+		</context>
+
+		<context id="aliases" style-ref="alias" extend-parent="false">
+			<match>@[a-zA-Z0-9_]+</match>
+		</context>
+
+		<context id="references" style-ref="reference" extend-parent="false">
+			<match>\\[a-zA-Z0-9_]+</match>
+		</context>
+
+		<context id="charsets" style-ref="charset" class-disabled="no-spell-check" style-inside="true">
+			<start>\[</start>
+			<end>\]</end>
+
+			<include>
+				<context ref="comments"/>
+				<context ref="literals"/>
+				<context ref="references"/>
+				<context ref="ranges"/>
+			</include>
+		</context>
+
+		<context id="ranges" style-ref="range" class-disabled="no-spell-check">
+			<start>\{</start>
+			<end>\}</end>
+
+			<include>
+				<context ref="literals"/>
+				<context ref="numbers"/>
+			</include>
+		</context>
+
+		<context id="numbers" style-ref="number" extend-parent="false">
+			<match>#?[0-9a-fA-F]+</match>
+		</context>
+
+		<context id="literals" style-ref="literal" class-disabled="no-spell-check">
+			<start>'</start>
+			<end>'</end>
+		</context>
+
+		<context id="comments" style-ref="comment" 
+		class="comment" class-disabled="no-spell-check">
+			<start>%</start>
+			<end>%</end>
+		</context>
+
+	</definitions>
+</language>
