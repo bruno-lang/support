@@ -49,7 +49,7 @@
 		</context>
 
 		<context id="arrays" style-ref="array">
-			<match>\[|\]</match>
+			<match>\[|\]|,</match>
 		</context>
 
 		<context id="effects" style-ref="effect">
@@ -121,12 +121,6 @@
 			</include>
 		</context>
 
-		<context id="keywords" style-ref="keyword">
-			<keyword>where</keyword>
-			<keyword>with</keyword>
-			<keyword>as</keyword>
-		</context>
-
 		<!--Main context-->
 		<context id="bruno" class="no-spell-check">
 			<include>
@@ -145,7 +139,6 @@
 				<context ref="arrays"/>
 				<context ref="effects"/>
 				<context ref="placeholders"/>
-				<context ref="keywords"/>
 				<context ref="labels"/>
 				<context ref="numbers"/>
 			</include>
